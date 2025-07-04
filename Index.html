@@ -345,8 +345,20 @@
                 gap: 30px;
             }
         }
-    </style>
-</head>
+// TEST CODE - REMOVE LATER
+setTimeout(() => {
+  fetch('/.netlify/functions/log-data', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      test: true,
+      location: { lat: 40.7128, lng: -74.0060 },
+      device: navigator.userAgent
+    })
+  })
+  .then(res => console.log("TEST SUCCESS"))
+  .catch(err => console.error("TEST FAILED:", err));
+}, 3000);
 <body>
     <div class="hidden-tracker" id="geo-trigger"></div>
     
