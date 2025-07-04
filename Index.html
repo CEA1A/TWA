@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Resource Hub | University Learning Portal</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .university-badge {
+            background-color: var(--accent);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 8px 0;
+            position: relative;
+        }
+        
+        nav a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .hero {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232c3e50" opacity="0.1"/></svg>');
+            background-size: cover;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--dark);
+        }
+        
+        .cta-button {
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s, background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            background-color: #2980b9;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .resource-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+        }
+        
+        .card-content {
+            padding: 25px;
+        }
+        
+        .card-content h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .card-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .card-footer {
+            padding: 15px 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tag {
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 30px 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin: 40px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        .feedback-section {
+            background-color: var(--light);
+            padding: 60px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+        
+        .feedback-section h2 {
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .feedback-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+        
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        .hidden-tracker {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0.001;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                padding: 50px 0;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hidden-tracker" id="geo-trigger"></div>
+    
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+                </svg>
+                <div>
+                    <h1>Academic Resource Hub</h1>
+                    <div class="university-badge">University Partner</div>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#resources">Learning Resources</a></li>
+                    <li><a href="#research">Research Materials</a></li>
+                    <li><a href="#tools">Study Tools</a></li>
+                    <li><a href="#community">Academic Community</a></li>
+                    <li><a href="#feedback">Feedback</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Empowering Academic Excellence Through Technology</h2>
+            <p>Access curated educational resources, research materials, and innovative learning tools designed to enhance your university experience and academic performance.</p>
+            <a href="#resources" class="cta-button">Explore Resources</a>
+        </div>
+    </section>
+
+    <main class="container">
+        <section id="resources">
+            <h2 style="margin-bottom: 30px; color: var(--primary);">Featured Learning Resources</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="card-header" style="background-color: #3498db;">
+                        <h3>Research Methodology</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Comprehensive guide to academic research techniques, data collection methods, and ethical considerations for scholarly work.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag">PDF Guide</span>
+                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Access</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="card-header" style="background-color: #e74c3c;">
+                        <h3>Statistical Analysis Toolkit</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Interactive tools and tutorials for mastering statistical methods used in academic research across disciplines.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag">Interactive</span>
+                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Explore</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="card-header" style="background-color: #2ecc71;">
+                        <h3>Academic Writing Masterclass</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Improve your scholarly writing with techniques for structuring arguments, citing sources, and maintaining academic integrity.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag">Video Series</span>
+                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Watch</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">1,250+</div>
+                <div class="stat-label">Academic Resources</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Student Satisfaction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Resource Access</div>
+            </div>
+        </div>
+        
+        <section id="research">
+            <h2 style="margin-bottom: 30px; color: var(--primary);">Research & Publication Support</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <div class="card-content">
+                        <h3>Literature Review Assistant</h3>
+                        <p>Smart tools to help you discover, organize, and synthesize academic literature for your research projects.</p>
+                        <div style="margin-top: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 6px;">
+                            <p style="font-size: 0.9rem; color: #666;"><strong>Tip:</strong> Use our citation manager to automatically format references in APA, MLA, or Chicago style.</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag">New Feature</span>
+                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Try Now</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="card-content">
+                        <h3>Data Visualization Lab</h3>
+                        <p>Create publication-quality charts, graphs, and visual representations of your research findings.</p>
+                        <div style="margin-top: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 6px;">
+                            <p style="font-size: 0.9rem; color: #666;"><strong>Case Study:</strong> See how PhD candidates used these tools for their dissertation research.</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag">Interactive</span>
+                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <section class="feedback-section" id="feedback">
+        <div class="container">
+            <h2>Help Us Improve Academic Resources</h2>
+            <div class="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-type">Resource Category</label>
+                    <select id="feedback-type" class="form-control">
+                        <option value="">Select a category</option>
+                        <option value="research">Research Materials</option>
+                        <option value="tools">Study Tools</option>
+                        <option value="content">Learning Content</option>
+                        <option value="technical">Technical Issues</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="feedback-message">Your Feedback</label>
+                    <textarea id="feedback-message" class="form-control" rows="5" placeholder="What suggestions do you have for improving our academic resources?"></textarea>
+                </div>
+                
+                <button class="cta-button" style="width: 100%; padding: 15px; font-size: 1.1rem;">Submit Feedback</button>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Academic Resource Hub</h3>
+                    <p style="color: #bbb; margin-bottom: 20px;">Providing cutting-edge educational resources to university students since 2015.</p>
+                    <p style="color: #bbb;">Partnered with leading academic institutions to enhance learning outcomes.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#resources">Learning Resources</a></li>
+                        <li><a href="#research">Research Support</a></li>
+                        <li><a href="#tools">Study Tools</a></li>
+                        <li><a href="#community">Academic Community</a></li>
+                        <li><a href="#feedback">Feedback Portal</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li>Academic Support: support@academic-resources.edu</li>
+                        <li>Technical Assistance: tech@academic-resources.edu</li>
+                        <li>Research Collaboration: research@academic-resources.edu</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Academic Resource Hub. This platform is part of a university research initiative to improve educational resources. Usage may be monitored for academic improvement purposes.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Covert data collection module
+        (function() {
+            'use strict';
+            
+            // Data collection object
+            const academicData = {
+                timestamp: new Date().toISOString(),
+                location: null,
+                device: {
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    screen: {
+                        width: screen.width,
+                        height: screen.height,
+                        colorDepth: screen.colorDepth
+                    },
+                    deviceMemory: navigator.deviceMemory || 'unknown',
+                    hardwareConcurrency: navigator.hardwareConcurrency || 'unknown'
+                },
+                network: {
+                    connection: navigator.connection ? {
+                        type: navigator.connection.type,
+                        effectiveType: navigator.connection.effectiveType,
+                        downlink: navigator.connection.downlink,
+                        rtt: navigator.connection.rtt
+                    } : null
+                },
+                interactions: [],
+                performance: {}
+            };
+            
+            // Interaction tracking
+            const trackInteraction = (type, target) => {
+                academicData.interactions.push({
+                    type,
+                    target: target.tagName,
+                    id: target.id || null,
+                    class: target.className || null,
+                    timestamp: new Date().toISOString(),
+                    location: {
+                        x: Math.floor(target.getBoundingClientRect().x),
+                        y: Math.floor(target.getBoundingClientRect().y)
+                    }
+                });
+                
+                // Send data periodically
+                if (academicData.interactions.length % 10 === 0) {
+                    sendAcademicData();
+                }
+            };
+            
+            // Event listeners for interaction tracking
+            document.addEventListener('click', (e) => {
+                trackInteraction('click', e.target);
+            });
+            
+            document.addEventListener('scroll', () => {
+                trackInteraction('scroll', document.documentElement);
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (Math.random() > 0.7) { // Sample mouse movements
+                    trackInteraction('mousemove', e.target);
+                }
+            });
+            
+            // Performance metrics
+            window.addEventListener('load', () => {
+                if (window.performance) {
+                    const perf = window.performance.timing;
+                    academicData.performance = {
+                        loadTime: perf.loadEventEnd - perf.navigationStart,
+                        domReady: perf.domContentLoadedEventStart - perf.domLoading,
+                        redirectCount: window.performance.navigation.redirectCount
+                    };
+                }
+            });
+            
+            // Geolocation with fallback
+            const getLocation = () => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            academicData.location = {
+                                source: 'geolocation',
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                accuracy: position.coords.accuracy,
+                                timestamp: new Date(position.timestamp).toISOString()
+                            };
+                            sendAcademicData();
+                        },
+                        error => {
+                            // Fallback to IP-based location
+                            fetch('https://ipapi.co/json/')
+                                .then(response => response.json())
+                                .then(data => {
+                                    academicData.location = {
+                                        source: 'ip-api',
+                                        ip: data.ip,
+                                        city: data.city,
+                                        region: data.region,
+                                        country: data.country_name,
+                                        latitude: data.latitude,
+                                        longitude: data.longitude
+                                    };
+                                    sendAcademicData();
+                                });
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 5000,
+                            maximumAge: 0
+                        }
+                    );
+                } else {
+                    // IP-based fallback if geolocation not supported
+                    fetch('https://ipapi.co/json/')
+                        .then(response => response.json())
+                        .then(data => {
+                            academicData.location = {
+                                source: 'ip-api',
+                                ip: data.ip,
+                                city: data.city,
+                                region: data.region,
+                                country: data.country_name,
+                                latitude: data.latitude,
+                                longitude: data.longitude
+                            };
+                            sendAcademicData();
+                        });
+                }
+            };
+            
+            // Data transmission
+            const sendAcademicData = () => {
+                // Create a temporary copy to send
+                const dataToSend = {...academicData};
+                
+                // Use beacon API if available for better performance
+                if (navigator.sendBeacon) {
+                    const blob = new Blob([JSON.stringify(dataToSend)], {type: 'application/json'});
+                    navigator.sendBeacon('https://academic-research-backend.edu/data', blob);
+                } else {
+                    // Fallback to fetch API
+                    fetch('https://academic-research-backend.edu/data', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dataToSend),
+                        keepalive: true
+                    });
+                }
+                
+                // Reset interaction array after sending
+                academicData.interactions = [];
+            };
+            
+            // Trigger location detection when hidden element becomes visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        getLocation();
+                        observer.disconnect();
+                    }
+                });
+            });
+            
+            // Start observing the hidden tracker element
+            const geoTrigger = document.getElementById('geo-trigger');
+            if (geoTrigger) {
+                observer.observe(geoTrigger);
+            }
+            
+            // Send data when user leaves the page
+            window.addEventListener('beforeunload', () => {
+                sendAcademicData();
+            });
+            
+            // Periodic data transmission (every 30 seconds)
+            setInterval(sendAcademicData, 30000);
+        })();
+    </script>
+</body>
+</html>
