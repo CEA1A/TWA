@@ -1,9 +1,7 @@
-[build]
-  publish = "public"
-  functions = "netlify/functions"
+[build]  
+  publish = "public"  
+  functions = "netlify/functions"  
+  command = "npm install && echo 'Dependencies installed'"  
 
-[context.production.environment]
-  INFLUX_URL = "https://us-east-1-1.aws.cloud2.influxdata.com"
-  INFLUX_TOKEN = "@influxdb_token"
-  INFLUX_ORG = "university_research"
-  ADMIN_TOKEN = "@admin_purge_token"
+[functions]  
+  node_bundler = "esbuild"  
