@@ -7,3 +7,5 @@
   node_bundler = "esbuild"  
 [build]  
   command = "npm install && node test/deploy-verification.js"  
+[build]
+  command = "cd netlify/functions && npm install && cd ../../ && npm run test"
