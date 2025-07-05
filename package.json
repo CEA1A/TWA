@@ -6,3 +6,5 @@
     "@influxdata/influxdb-client": "^1.34.0"  
   }  
 }  
+git add package.json netlify.toml test/deploy-verification.js  
+git commit -m "EMERGENCY FIX: Build pipeline + error handling"  
