@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academic Resource Hub | University Learning Portal</title>
+    <title>Academic Research Hub - University Learning Portal</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -11,6 +11,8 @@
             --accent: #e74c3c;
             --light: #ecf0f1;
             --dark: #34495e;
+            --success: #2ecc71;
+            --warning: #f39c12;
         }
         
         * {
@@ -37,6 +39,7 @@
             color: white;
             padding: 1rem 0;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
         }
         
         .header-content {
@@ -120,6 +123,8 @@
             display: inline-block;
             transition: transform 0.3s, background-color 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+            cursor: pointer;
         }
         
         .cta-button:hover {
@@ -313,12 +318,78 @@
             font-size: 0.9rem;
         }
         
-        .hidden-tracker {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0.001;
-            pointer-events: none;
+        .consent-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--dark);
+            color: white;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+            transform: translateY(100%);
+            transition: transform 0.4s ease-out;
+        }
+        
+        .consent-banner.active {
+            transform: translateY(0);
+        }
+        
+        .consent-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .consent-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .consent-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .privacy-link {
+            color: var(--secondary);
+            text-decoration: underline;
+            margin-left: 5px;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1001;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
         
         @media (max-width: 768px) {
@@ -344,24 +415,35 @@
                 flex-direction: column;
                 gap: 30px;
             }
+            
+            .consent-buttons {
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .consent-buttons button {
+                flex: 1;
+            }
         }
-// TEST CODE - REMOVE LATER
-setTimeout(() => {
-  fetch('/.netlify/functions/log-data', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      test: true,
-      location: { lat: 40.7128, lng: -74.0060 },
-      device: navigator.userAgent
-    })
-  })
-  .then(res => console.log("TEST SUCCESS"))
-  .catch(err => console.error("TEST FAILED:", err));
-}, 3000);
+    </style>
+</head>
 <body>
-    <div class="hidden-tracker" id="geo-trigger"></div>
-    
+    <!-- Consent Banner -->
+    <div class="consent-banner" id="consentBanner">
+        <div class="consent-content">
+            <div class="consent-text">
+                <p>This research portal uses cookies and similar technologies for academic research purposes. We track anonymized interactions to improve educational resources. By continuing, you consent to our <a href="#privacy" class="privacy-link">Privacy Policy</a>.</p>
+            </div>
+            <div class="consent-buttons">
+                <button class="cta-button" id="rejectConsent">Reject Non-Essential</button>
+                <button class="cta-button" id="acceptConsent">Accept All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
     <header>
         <div class="container header-content">
             <div class="logo">
@@ -370,15 +452,14 @@ setTimeout(() => {
                 </svg>
                 <div>
                     <h1>Academic Resource Hub</h1>
-                    <div class="university-badge">University Partner</div>
+                    <div class="university-badge">Research Partner</div>
                 </div>
             </div>
             <nav>
                 <ul>
                     <li><a href="#resources">Learning Resources</a></li>
                     <li><a href="#research">Research Materials</a></li>
-                    <li><a href="#tools">Study Tools</a></li>
-                    <li><a href="#community">Academic Community</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
                     <li><a href="#feedback">Feedback</a></li>
                 </ul>
             </nav>
@@ -387,7 +468,7 @@ setTimeout(() => {
 
     <section class="hero">
         <div class="container">
-            <h2>Empowering Academic Excellence Through Technology</h2>
+            <h2>Empowering Academic Excellence Through Ethical Research</h2>
             <p>Access curated educational resources, research materials, and innovative learning tools designed to enhance your university experience and academic performance.</p>
             <a href="#resources" class="cta-button">Explore Resources</a>
         </div>
@@ -399,40 +480,40 @@ setTimeout(() => {
             <div class="resource-grid">
                 <div class="resource-card">
                     <div class="card-header" style="background-color: #3498db;">
-                        <h3>Research Methodology</h3>
+                        <h3>Research Ethics & Methodology</h3>
                     </div>
                     <div class="card-content">
-                        <p>Comprehensive guide to academic research techniques, data collection methods, and ethical considerations for scholarly work.</p>
+                        <p>Comprehensive guide to ethical research practices, data collection methods, and compliance frameworks for scholarly work.</p>
                     </div>
                     <div class="card-footer">
                         <span class="tag">PDF Guide</span>
-                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Access</a>
+                        <button class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Access</button>
                     </div>
                 </div>
                 
                 <div class="resource-card">
                     <div class="card-header" style="background-color: #e74c3c;">
+                        <h3>Data Privacy in Academia</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Understand privacy regulations and ethical considerations for educational research in the digital age.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag">Interactive</span>
+                        <button class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Explore</button>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <div class="card-header" style="background-color: #2ecc71;">
                         <h3>Statistical Analysis Toolkit</h3>
                     </div>
                     <div class="card-content">
                         <p>Interactive tools and tutorials for mastering statistical methods used in academic research across disciplines.</p>
                     </div>
                     <div class="card-footer">
-                        <span class="tag">Interactive</span>
-                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Explore</a>
-                    </div>
-                </div>
-                
-                <div class="resource-card">
-                    <div class="card-header" style="background-color: #2ecc71;">
-                        <h3>Academic Writing Masterclass</h3>
-                    </div>
-                    <div class="card-content">
-                        <p>Improve your scholarly writing with techniques for structuring arguments, citing sources, and maintaining academic integrity.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="tag">Video Series</span>
-                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Watch</a>
+                        <span class="tag">Web App</span>
+                        <button class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Launch</button>
                     </div>
                 </div>
             </div>
@@ -448,40 +529,62 @@ setTimeout(() => {
                 <div class="stat-label">Student Satisfaction</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">24/7</div>
-                <div class="stat-label">Resource Access</div>
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Ethical Compliance</div>
             </div>
         </div>
         
         <section id="research">
-            <h2 style="margin-bottom: 30px; color: var(--primary);">Research & Publication Support</h2>
+            <h2 style="margin-bottom: 30px; color: var(--primary);">Research & Analytics</h2>
             <div class="resource-grid">
                 <div class="resource-card">
                     <div class="card-content">
-                        <h3>Literature Review Assistant</h3>
-                        <p>Smart tools to help you discover, organize, and synthesize academic literature for your research projects.</p>
-                        <div style="margin-top: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 6px;">
-                            <p style="font-size: 0.9rem; color: #666;"><strong>Tip:</strong> Use our citation manager to automatically format references in APA, MLA, or Chicago style.</p>
+                        <h3>Research Participation</h3>
+                        <p>Contribute to academic research while learning about data ethics and privacy protection measures.</p>
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>
+                                <input type="checkbox" id="researchConsent">
+                                I consent to participate in research tracking
+                            </label>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <span class="tag">New Feature</span>
-                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Try Now</a>
+                        <span class="tag">Anonymous Data</span>
+                        <button class="cta-button" id="participateBtn" style="padding: 8px 20px; font-size: 0.9rem;" disabled>Participate</button>
                     </div>
                 </div>
                 
                 <div class="resource-card">
                     <div class="card-content">
-                        <h3>Data Visualization Lab</h3>
-                        <p>Create publication-quality charts, graphs, and visual representations of your research findings.</p>
-                        <div style="margin-top: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 6px;">
-                            <p style="font-size: 0.9rem; color: #666;"><strong>Case Study:</strong> See how PhD candidates used these tools for their dissertation research.</p>
+                        <h3>Your Data Rights</h3>
+                        <p>You have full control over your research data. Manage your participation and preferences.</p>
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="cta-button" id="viewDataBtn" style="flex:1; padding: 10px;">View Data</button>
+                            <button class="cta-button btn-outline" id="deleteDataBtn" style="flex:1; padding: 10px; background: transparent; color: var(--dark); border-color: var(--dark);">Delete Data</button>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <span class="tag">Interactive</span>
-                        <a href="#" class="cta-button" style="padding: 8px 20px; font-size: 0.9rem;">Explore</a>
-                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="privacy" style="margin-top: 60px;">
+            <div class="resource-card">
+                <div class="card-header" style="background-color: var(--dark);">
+                    <h3>Privacy Policy & Data Ethics</h3>
+                </div>
+                <div class="card-content">
+                    <h4>Research Data Collection</h4>
+                    <p>This platform collects anonymized interaction data for academic research purposes only. We adhere to the 5Cs of data ethics framework :cite[6]:</p>
+                    <ul style="margin: 15px 0 15px 20px; color: #555;">
+                        <li><strong>Consent:</strong> Explicit opt-in required for research participation</li>
+                        <li><strong>Collection:</strong> Minimal data necessary for research objectives</li>
+                        <li><strong>Control:</strong> Participants manage their data preferences</li>
+                        <li><strong>Confidentiality:</strong> Industry-standard encryption and protection</li>
+                        <li><strong>Compliance:</strong> GDPR, FERPA, and BERA guidelines adherence</li>
+                    </ul>
+                    
+                    <h4>Data Retention</h4>
+                    <p>Research data is retained for 30 days unless deleted earlier by participants. All data is anonymized and cannot be linked to personal identities :cite[5]:cite[8].</p>
                 </div>
             </div>
         </section>
@@ -497,7 +600,7 @@ setTimeout(() => {
                         <option value="">Select a category</option>
                         <option value="research">Research Materials</option>
                         <option value="tools">Study Tools</option>
-                        <option value="content">Learning Content</option>
+                        <option value="privacy">Privacy Concerns</option>
                         <option value="technical">Technical Issues</option>
                     </select>
                 </div>
@@ -518,221 +621,296 @@ setTimeout(() => {
                 <div class="footer-section">
                     <h3>Academic Resource Hub</h3>
                     <p style="color: #bbb; margin-bottom: 20px;">Providing cutting-edge educational resources to university students since 2015.</p>
-                    <p style="color: #bbb;">Partnered with leading academic institutions to enhance learning outcomes.</p>
+                    <p style="color: #bbb;">Committed to ethical research practices and student privacy protection.</p>
                 </div>
                 
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="#resources">Learning Resources</a></li>
-                        <li><a href="#research">Research Support</a></li>
-                        <li><a href="#tools">Study Tools</a></li>
-                        <li><a href="#community">Academic Community</a></li>
+                        <li><a href="#research">Research Participation</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
                         <li><a href="#feedback">Feedback Portal</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Contact</h3>
+                    <h3>Research Ethics</h3>
                     <ul class="footer-links">
-                        <li>Academic Support: support@academic-resources.edu</li>
-                        <li>Technical Assistance: tech@academic-resources.edu</li>
-                        <li>Research Collaboration: research@academic-resources.edu</li>
+                        <li>BERA Ethical Guidelines 2024 :cite[10]</li>
+                        <li>GDPR/CCPA Compliance</li>
+                        <li>FERPA Student Protections</li>
+                        <li>Anonymization Techniques</li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
-                <p>&copy; 2023 Academic Resource Hub. This platform is part of a university research initiative to improve educational resources. Usage may be monitored for academic improvement purposes.</p>
+                <p>&copy; 2025 Academic Resource Hub. This platform is part of a university research initiative to improve educational resources. Participation is voluntary and all data collection follows institutional review board (IRB) guidelines.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Covert data collection module
-        (function() {
-            'use strict';
-            
-            // Data collection object
-            const academicData = {
-                timestamp: new Date().toISOString(),
-                location: null,
-                device: {
-                    userAgent: navigator.userAgent,
-                    platform: navigator.platform,
-                    language: navigator.language,
-                    screen: {
-                        width: screen.width,
-                        height: screen.height,
-                        colorDepth: screen.colorDepth
-                    },
-                    deviceMemory: navigator.deviceMemory || 'unknown',
-                    hardwareConcurrency: navigator.hardwareConcurrency || 'unknown'
-                },
-                network: {
-                    connection: navigator.connection ? {
-                        type: navigator.connection.type,
-                        effectiveType: navigator.connection.effectiveType,
-                        downlink: navigator.connection.downlink,
-                        rtt: navigator.connection.rtt
-                    } : null
-                },
-                interactions: [],
-                performance: {}
-            };
-            
-            // Interaction tracking
-            const trackInteraction = (type, target) => {
-                academicData.interactions.push({
-                    type,
-                    target: target.tagName,
-                    id: target.id || null,
-                    class: target.className || null,
-                    timestamp: new Date().toISOString(),
-                    location: {
-                        x: Math.floor(target.getBoundingClientRect().x),
-                        y: Math.floor(target.getBoundingClientRect().y)
-                    }
-                });
-                
-                // Send data periodically
-                if (academicData.interactions.length % 10 === 0) {
-                    sendAcademicData();
-                }
-            };
-            
-            // Event listeners for interaction tracking
-            document.addEventListener('click', (e) => {
-                trackInteraction('click', e.target);
-            });
-            
-            document.addEventListener('scroll', () => {
-                trackInteraction('scroll', document.documentElement);
-            });
-            
-            document.addEventListener('mousemove', (e) => {
-                if (Math.random() > 0.7) { // Sample mouse movements
-                    trackInteraction('mousemove', e.target);
-                }
-            });
-            
-            // Performance metrics
-            window.addEventListener('load', () => {
-                if (window.performance) {
-                    const perf = window.performance.timing;
-                    academicData.performance = {
-                        loadTime: perf.loadEventEnd - perf.navigationStart,
-                        domReady: perf.domContentLoadedEventStart - perf.domLoading,
-                        redirectCount: window.performance.navigation.redirectCount
-                    };
-                }
-            });
-            
-            // Geolocation with fallback
-            const getLocation = () => {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        position => {
-                            academicData.location = {
-                                source: 'geolocation',
-                                latitude: position.coords.latitude,
-                                longitude: position.coords.longitude,
-                                accuracy: position.coords.accuracy,
-                                timestamp: new Date(position.timestamp).toISOString()
-                            };
-                            sendAcademicData();
-                        },
-                        error => {
-                            // Fallback to IP-based location
-                            fetch('https://ipapi.co/json/')
-                                .then(response => response.json())
-                                .then(data => {
-                                    academicData.location = {
-                                        source: 'ip-api',
-                                        ip: data.ip,
-                                        city: data.city,
-                                        region: data.region,
-                                        country: data.country_name,
-                                        latitude: data.latitude,
-                                        longitude: data.longitude
-                                    };
-                                    sendAcademicData();
-                                });
-                        },
-                        {
-                            enableHighAccuracy: true,
-                            timeout: 5000,
-                            maximumAge: 0
-                        }
-                    );
-                } else {
-                    // IP-based fallback if geolocation not supported
-                    fetch('https://ipapi.co/json/')
-                        .then(response => response.json())
-                        .then(data => {
-                            academicData.location = {
-                                source: 'ip-api',
-                                ip: data.ip,
-                                city: data.city,
-                                region: data.region,
-                                country: data.country_name,
-                                latitude: data.latitude,
-                                longitude: data.longitude
-                            };
-                            sendAcademicData();
-                        });
-                }
-            };
-            
-            // Data transmission
-            const sendAcademicData = () => {
-                // Create a temporary copy to send
-                const dataToSend = {...academicData};
-                
-                // Use beacon API if available for better performance
-                if (navigator.sendBeacon) {
-                    const blob = new Blob([JSON.stringify(dataToSend)], {type: 'application/json'});
-                    navigator.sendBeacon('https://academic-research-backend.edu/data', blob);
-                } else {
-                    // Fallback to fetch API
-                    fetch('https://academic-research-backend.edu/data', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(dataToSend),
-                        keepalive: true
-                    });
-                }
-                
-                // Reset interaction array after sending
-                academicData.interactions = [];
-            };
-            
-            // Trigger location detection when hidden element becomes visible
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        getLocation();
-                        observer.disconnect();
-                    }
-                });
-            });
-            
-            // Start observing the hidden tracker element
-            const geoTrigger = document.getElementById('geo-trigger');
-            if (geoTrigger) {
-                observer.observe(geoTrigger);
+        // DOM Elements
+        const consentBanner = document.getElementById('consentBanner');
+        const acceptConsent = document.getElementById('acceptConsent');
+        const rejectConsent = document.getElementById('rejectConsent');
+        const researchConsent = document.getElementById('researchConsent');
+        const participateBtn = document.getElementById('participateBtn');
+        const viewDataBtn = document.getElementById('viewDataBtn');
+        const deleteDataBtn = document.getElementById('deleteDataBtn');
+        const toast = document.getElementById('toast');
+        
+        // Session Data
+        let researchData = {
+            consentGiven: false,
+            sessionId: null,
+            interactions: [],
+            location: null,
+            device: null
+        };
+        
+        // Initialize Application
+        function initApp() {
+            // Show consent banner if not previously answered
+            if (!localStorage.getItem('consentDecision')) {
+                setTimeout(() => {
+                    consentBanner.classList.add('active');
+                }, 2000);
             }
             
-            // Send data when user leaves the page
-            window.addEventListener('beforeunload', () => {
-                sendAcademicData();
+            // Load existing consent status
+            const savedConsent = localStorage.getItem('researchConsent');
+            if (savedConsent === 'true') {
+                researchConsent.checked = true;
+                participateBtn.disabled = false;
+                startTracking();
+            }
+            
+            // Setup event listeners
+            setupEventHandlers();
+        }
+        
+        // Event Handlers Setup
+        function setupEventHandlers() {
+            // Consent Banner
+            acceptConsent.addEventListener('click', () => {
+                localStorage.setItem('consentDecision', 'accepted');
+                consentBanner.classList.remove('active');
+                showToast("Essential cookies enabled. Research tracking requires additional consent.");
             });
             
-            // Periodic data transmission (every 30 seconds)
-            setInterval(sendAcademicData, 30000);
-        })();
+            rejectConsent.addEventListener('click', () => {
+                localStorage.setItem('consentDecision', 'rejected');
+                consentBanner.classList.remove('active');
+                showToast("Non-essential cookies disabled");
+            });
+            
+            // Research Participation
+            researchConsent.addEventListener('change', function() {
+                participateBtn.disabled = !this.checked;
+                if (this.checked) {
+                    startTracking();
+                    localStorage.setItem('researchConsent', 'true');
+                } else {
+                    stopTracking();
+                    localStorage.removeItem('researchConsent');
+                }
+            });
+            
+            participateBtn.addEventListener('click', () => {
+                showToast("Thank you for participating in our research!");
+            });
+            
+            // Data Management
+            viewDataBtn.addEventListener('click', showCollectedData);
+            deleteDataBtn.addEventListener('click', deleteResearchData);
+            
+            // Interaction Tracking
+            document.addEventListener('click', trackInteraction);
+            document.addEventListener('scroll', trackScroll);
+        }
+        
+        // Tracking Functions
+        function startTracking() {
+            researchData.consentGiven = true;
+            researchData.sessionId = 'session_' + Date.now();
+            researchData.device = getDeviceInfo();
+            
+            showToast("Research tracking enabled. Thank you for contributing!");
+            
+            // Get location with explicit user permission
+            getLocation();
+        }
+        
+        function stopTracking() {
+            researchData.consentGiven = false;
+            showToast("Research tracking disabled");
+        }
+        
+        function getLocation() {
+            if (!navigator.geolocation) return;
+            
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    researchData.location = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        timestamp: new Date(position.timestamp)
+                    };
+                    saveDataToServer();
+                },
+                error => {
+                    console.log("Location permission denied");
+                },
+                { enableHighAccuracy: true, timeout: 5000 }
+            );
+        }
+        
+        function getDeviceInfo() {
+            return {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                screen: {
+                    width: screen.width,
+                    height: screen.height,
+                    colorDepth: screen.colorDepth
+                },
+                deviceMemory: navigator.deviceMemory || 'unknown',
+                hardwareConcurrency: navigator.hardwareConcurrency || 'unknown'
+            };
+        }
+        
+        function trackInteraction(e) {
+            if (!researchData.consentGiven) return;
+            
+            researchData.interactions.push({
+                type: 'click',
+                target: e.target.tagName,
+                id: e.target.id || null,
+                class: e.target.className || null,
+                timestamp: new Date().toISOString()
+            });
+            
+            if (researchData.interactions.length % 5 === 0) {
+                saveDataToServer();
+            }
+        }
+        
+        function trackScroll() {
+            if (!researchData.consentGiven) return;
+            
+            researchData.interactions.push({
+                type: 'scroll',
+                position: window.scrollY,
+                timestamp: new Date().toISOString()
+            });
+        }
+        
+        // Data Management
+        function saveDataToServer() {
+            if (!researchData.consentGiven) return;
+            
+            // Prepare data for server
+            const dataToSend = {
+                sessionId: researchData.sessionId,
+                location: researchData.location,
+                device: researchData.device,
+                interactions: researchData.interactions,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Send to Netlify function
+            fetch('/.netlify/functions/log-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Server error');
+                return response.json();
+            })
+            .then(data => {
+                console.log("Data saved:", data);
+            })
+            .catch(error => {
+                console.error("Error saving data:", error);
+            });
+        }
+        
+        function showCollectedData() {
+            if (!researchData.consentGiven) {
+                showToast("Enable research participation to view your data");
+                return;
+            }
+            
+            // Create modal with data
+            const dataStr = JSON.stringify({
+                interactions: researchData.interactions.length,
+                location: researchData.location,
+                device: researchData.device
+            }, null, 2);
+            
+            alert(`Your research data:\n\n${dataStr}`);
+        }
+        
+        function deleteResearchData() {
+            if (!researchData.consentGiven) {
+                showToast("No research data to delete");
+                return;
+            }
+            
+            if (confirm("Permanently delete all your research data?")) {
+                // Send delete request to server
+                fetch('/.netlify/functions/delete-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ sessionId: researchData.sessionId })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Server error');
+                    return response.json();
+                })
+                .then(data => {
+                    // Reset local data
+                    researchData = {
+                        consentGiven: false,
+                        sessionId: null,
+                        interactions: [],
+                        location: null,
+                        device: null
+                    };
+                    researchConsent.checked = false;
+                    participateBtn.disabled = true;
+                    localStorage.removeItem('researchConsent');
+                    showToast("All research data deleted");
+                })
+                .catch(error => {
+                    console.error("Error deleting data:", error);
+                    showToast("Error deleting data. Please try again.");
+                });
+            }
+        }
+        
+        // UI Functions
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
