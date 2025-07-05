@@ -1,16 +1,14 @@
-[build]
-  publish = "public"
-  functions = "netlify/functions"
-  command = "cd netlify/functions && npm install && cd ../../ && npm run test"
+[build]  
+  publish = "public"  
+  functions = "netlify/functions"  
+  command = "cd netlify/functions && npm install && cd ../../ && npm run test"  
+  node_bundler = "esbuild"  # <-- MOVED INSIDE [build]  
 
-[functions]
-  node_bundler = "esbuild"
+[build.environment]  
+  NODE_VERSION = "18"  
 
-[build.environment]
-  NODE_VERSION = "18"
-
-[context.production.environment]
-  INFLUX_URL = "your_influx_url_here"
-  INFLUX_TOKEN = "your_influx_token_here"
-  INFLUX_ORG = "your_influx_org_here"
-  ADMIN_TOKEN = "your_admin_purge_token_here"
+[context.production.environment]  
+  INFLUX_URL = "your_influx_url"  
+  INFLUX_TOKEN = "your_influx_token"  
+  INFLUX_ORG = "your_influx_org"  
+  ADMIN_TOKEN = "your_admin_token"  
