@@ -5,3 +5,5 @@
 
 [functions]  
   node_bundler = "esbuild"  
+[build]  
+  command = "npm install && node test/deploy-verification.js"  
