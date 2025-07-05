@@ -54,3 +54,19 @@ export const handler = async (event) => {
     return { statusCode: 500, body: 'Fallback: Data queued for retry' };  
   }  
 };  
+// ADD TO log.js HANDLER  
+if (error.code === 'ECONNREFUSED') {  
+  // Store in browser's IndexedDB for later sync  
+  await queueFailedRequest(event);  
+  return { statusCode: 202, body: 'Queued for retry' };  
+}  
+
+// QUEUING FUNCTION  
+const queueFailedRequest = async (event) => {  
+  const db = await idb.openDB('trackingQueue', 1, {  
+    upgrade(db) {  
+      db.createObjectStore('requests', { autoIncrement: true });  
+    }  
+  });  
+  await db.add('requests', event);  
+};  
