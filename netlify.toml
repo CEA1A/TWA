@@ -9,3 +9,10 @@
   command = "npm install && node test/deploy-verification.js"  
 [build]
   command = "cd netlify/functions && npm install && cd ../../ && npm run test"
+[build]  
+  publish = "public"  
+  functions = "netlify/functions"  
+  command = "cd netlify/functions && npm install && cd ../../ && node test/deploy-verification.js"  
+
+[functions]  
+  node_bundler = "esbuild"  
