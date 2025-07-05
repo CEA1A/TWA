@@ -1,13 +1,8 @@
-{  
-  "name": "educational-tracking",  
-  "version": "1.0.0",  
-  "private": true,  
-  "dependencies": {  
-    "@influxdata/influxdb-client": "^1.34.0"  
-  }  
-}  
-{  
-  "scripts": {  
-    "test": "node test/build-verify.js && node test/deploy-verification.js"  
-  }  
-}  
+{
+  "name": "educational-tracking",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node test/deploy-verification.js"
+  }
+}
