@@ -647,19 +647,18 @@
             
             <div class="copyright">
                 <p>&copy; 2025 Academic Resource Hub. This platform is part of a university research initiative to improve educational resources. Participation is voluntary and all data collection follows institutional review board (IRB) guidelines.</p>
-            </div>
+            <div class="consent-banner" id="consentBanner">
+    <div class="consent-content">
+        <div class="consent-text">
+            <p>We use cookies to enhance your experience. <strong>Essential cookies</strong> are required for site functionality. <strong>Research cookies</strong> help improve academic resources through anonymized data collection. See our <a href="#privacy" class="privacy-link">Privacy Policy</a> for details.</p>
         </div>
-    </footer>
-
-    <script>
-        // DOM Elements
-        const consentBanner = document.getElementById('consentBanner');
-        const acceptConsent = document.getElementById('acceptConsent');
-        const rejectConsent = document.getElementById('rejectConsent');
-        const researchConsent = document.getElementById('researchConsent');
-        const participateBtn = document.getElementById('participateBtn');
-        const viewDataBtn = document.getElementById('viewDataBtn');
-        const deleteDataBtn = document.getElementById('deleteDataBtn');
+        <div class="consent-buttons">
+            <button class="cta-button btn-outline" id="essentialOnly">Essential Only</button>
+            <button class="cta-button" id="acceptResearch">Accept Research</button>
+            <button class="cta-button" id="acceptAll">Accept All</button>
+        </div>
+    </div>
+</div>
         const toast = document.getElementById('toast');
         
         // Session Data
