@@ -1,18 +1,15 @@
 [build]  
   publish = "public"  
   functions = "netlify/functions"  
-  command = "npm install && echo 'Dependencies installed'"  
+  command = "cd netlify/functions && npm install && cd ../../ && npm run test"  
 
 [functions]  
   node_bundler = "esbuild"  
-[build]  
-  command = "npm install && node test/deploy-verification.js"  
-[build]
-  command = "cd netlify/functions && npm install && cd ../../ && npm run test"
-[build]  
-  publish = "public"  
-  functions = "netlify/functions"  
-  command = "cd netlify/functions && npm install && cd ../../ && node test/deploy-verification.js"  
 
-[functions]  
-  node_bundler = "esbuild"  
+[context.production]  
+  environment = {  
+    INFLUX_URL = "https://us-east-1-1.aws.cloud2.influxdata.com",  
+    INFLUX_TOKEN = "@influxdb_token",  
+    INFLUX_ORG = "university_research",  
+    ADMIN_TOKEN = "@admin_purge_token"  
+  }  
