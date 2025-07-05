@@ -1,0 +1,48 @@
+/* Professional academic styling */  
+body {  
+  font-family: 'Georgia', serif;  
+  line-height: 1.6;  
+  color: #333;  
+  max-width: 800px;  
+  margin: 0 auto;  
+  padding: 20px;  
+}  
+
+.university-header {  
+  background: #0d2d62; /* Dark blue */  
+  color: white;  
+  padding: 20px;  
+  margin-bottom: 30px;  
+  border-radius: 4px;  
+}  
+
+.research-section {  
+  border-left: 4px solid #b31b1b; /* Cambridge red */  
+  padding-left: 20px;  
+  margin-bottom: 30px;  
+}  
+
+.container {  
+  padding: 0 20px;  
+}  
+
+blockquote {  
+  font-style: italic;  
+  color: #555;  
+  border-left: 3px solid #0d2d62;  
+  padding-left: 15px;  
+  margin-left: 0;  
+}  
+
+a {  
+  color: #b31b1b;  
+  text-decoration: none;  
+}  
+
+a:hover {  
+  text-decoration: underline;  
+}  
+
+ul {  
+  padding-left: 20px;  
+}  
